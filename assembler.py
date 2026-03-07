@@ -41,9 +41,10 @@ Btype={"beq":{"opcode":"1100011","func3":"000"},
 
 Jtype={"jal":{"opcode":"1101111"}}
 
+Utype={"lui":{"type": "U", "opcode": "0110111"},
+    "auipc":{"type": "U", "opcode": "0010111"}}
 
-
-# this function will read the input filr and store the instructions in a list
+# this function will read the input file and store the instructions in a list
 def read_file(file):
     try:
         with open(file,'r') as f:
@@ -73,7 +74,7 @@ def split_part(line):
     line=line.replace('(',' ').replace(')',' ')
     
    
-    line=line.strip() #to remove extra spaces at begening
+    line=line.strip() #to remove extra spaces at beginning
    
     line=line.split()
 
@@ -182,8 +183,45 @@ def encode_s(parts):
     print("enter you code here for stype")
 
 def encode_j(parts,label_map,addr):
-    print("enter you code here for jtype")
+    if len(parts) !=3:
+        print("wrong number of arguments")
+        exit()
+    instr =parts[0]
+    if parts[1] not in registers:
+        print("invalid parameter " + parts[1])
+        exit()
 
+    rd= registers[parts[1]]
+    target = parts[2]
+    if target in label_map:
+        offset =label_map[target] - addr
+    else:
+        offset = int(target)
+
+    opcode= Jtype[instr]["opcode"]
+    imm_bin= to_binary(offset, 21) 
+    bit20= imm_bin[0]  
+    bits10_1 = imm_bin[10:20]  
+    bit11= imm_bin[9]
+    bits19_12= imm_bin[1:9]
+    return bit20 + bits10_1 + bit11 + bits19_12 + rd + opcode
+
+def encode_u(parts):   
+    if len(parts)!=3:
+        print("wrong number of arguments")
+        exit()        
+    instr=parts[0]    
+    if instr not in Utype:
+        print("invalid instruction " + instr)
+        exit()
+    if parts[1] not in registers:
+        print("invalid parameter " + parts[1])
+        exit()
+    rd  = registers[parts[1]]
+    imm = int(parts[2])
+    opcode  = Utype[instr]["opcode"]
+    imm_bin = to_binary(imm, 20)
+    return imm_bin + rd + opcode
 
 def gen_machine_code(c_line,label_map):
 
@@ -229,6 +267,8 @@ def gen_machine_code(c_line,label_map):
             result = encode_j(parts,label_map, addr)
 
             s_last = False
+        elif inst in Utype:
+                   result = encode_u(parts
         else:
             result = None
             err= "unknonwn instruction" + inst

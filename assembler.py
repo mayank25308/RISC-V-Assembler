@@ -41,7 +41,8 @@ Btype={"beq":{"opcode":"1100011","func3":"000"},
 
 Jtype={"jal":{"opcode":"1101111"}}
 
-
+Utype={ "lui":{"type": "U", "opcode": "0110111"},
+    "auipc":{"type": "U", "opcode": "0010111"}}
 
 # this function will read the input filr and store the instructions in a list
 def read_file(file):

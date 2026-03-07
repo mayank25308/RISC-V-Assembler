@@ -150,9 +150,34 @@ def encode_i(parts,label_map,addr):
     return "00"
    
 def encode_b(parts,label_map,addr):
-    return "00000000000000000000000001100011"
-    
-
+    if len(parts)!=4:
+        print("invalid instruction"+instr)
+        exit()
+    instr=parts[0]
+    if instr not in Btype:
+        print("invalid parameter"+parts[1])
+        exit()
+    if parts[1] not in registers:
+        print("invalid parameter"+parts[2])
+        exit()
+    if parts[2] not in registers:
+        print("invalid parameter"+parts[2])
+        exit()            
+    rs1=registers[parts[1]]
+    rs2=registers[parts[2]]
+    target=parts[3]
+    if target in label_map:
+        offset=label_map[target]-addr
+    else:
+        offset=int(target)
+        opcode=Btype[instr]["opcode"]
+        func3=Btype[instr]["func3"]
+        imm_bin=to_binary(offset,13)
+        bit1=imm_bin[0]
+        bit2=imm_bin[1]
+        bit3=imm_bin[2:8]
+        bit4=imm_bin[8:12]
+        return bit1+bit3+rs2+rs1+func3+bit4+bit2+opcode    
 def encode_s(parts):
     print("enter you code here for stype")
 

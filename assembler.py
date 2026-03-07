@@ -268,7 +268,7 @@ def gen_machine_code(c_line,label_map):
 
             s_last = False
         elif inst in Utype:
-                   result = encode_u(parts
+                   result = encode_u(parts)
         else:
             result = None
             err= "unknonwn instruction" + inst

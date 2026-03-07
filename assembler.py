@@ -158,7 +158,29 @@ def encode_s(parts):
     print("enter you code here for stype")
 
 def encode_j(parts,label_map,addr):
-    print("enter you code here for jtype")
+    if len(parts) !=3:
+        print("wrong number of arguments")
+        exit()
+    instr =parts[0]
+    if parts[1] not in registers:
+        print("invalid parameter " + parts[1])
+        exit()
+
+    rd= registers[parts[1]]
+    target = parts[2]
+    if target in label_map:
+        offset =label_map[target] - addr
+    else:
+        offset = int(target)
+
+    opcode= Jtype[instr]["opcode"]
+    imm_bin= to_binary(offset, 21) 
+    bit20= imm_bin[0]  
+    bits10_1 = imm_bin[10:20]  
+    bit11= imm_bin[9]
+    bits19_12= imm_bin[1:9]
+    return bit20 + bits10_1 + bit11 + bits19_12 + rd + opcode
+
 def encode_u(parts):   
     if len(parts)!=3:
         print("wrong number of arguments")

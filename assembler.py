@@ -103,6 +103,7 @@ def labelmap_and_lines(lines):
 
 
 def encode_r(parts):
+    
     if len(parts)!=4:
         print("wrong number of arguments")
         exit()

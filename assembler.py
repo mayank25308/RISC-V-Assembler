@@ -160,12 +160,15 @@ def encode_s(parts):
 def encode_j(parts,label_map,addr):
     print("enter you code here for jtype")
 def encode_u(parts):   
-   if len(parts)!=3:
+    if len(parts)!=3:
         print("wrong number of arguments")
         exit()        
     instr=parts[0]    
     if instr not in Utype:
         print("invalid instruction " + instr)
+        exit()
+    if parts[1] not in registers:
+        print("invalid parameter " + parts[1])
         exit()
     rd  = registers[parts[1]]
     imm = int(parts[2])

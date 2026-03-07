@@ -16,3 +16,16 @@ Rtype={"add":{"opcode":"0110011","func3":"000","func7":"0000000"},
        "or":{"opcode":"0110011","func3":"110","func7":"0000000"},
        "and":{"opcode":"0110011","func3":"111","func7":"0000000"}}
 
+
+def read_file(input):
+    with open(input,'r') as file:
+        info=file.readlines()
+    lines=[]
+    for i in info:
+        i=i.strip()
+        if i!="":
+            lines.append(i)
+    print(lines)
+
+read_file("input.txt")
+        

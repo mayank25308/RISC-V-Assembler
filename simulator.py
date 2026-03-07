@@ -29,3 +29,4 @@ def read_file(input):
 
 read_file("input.txt")
         
+# this function will read the input filr and store the instructions in a list

@@ -1,13 +1,13 @@
 
 registers={"x0":"00000","x1":"00001","x2":"00010","x3":"00011","x4":"00100",
-           "x5":"00101","x6":"00110","x7":"00111","x8":"01000","x9":"01001",
-           "x10":"01010","x11":"01011","x12":"01100","x13":"01101","x14":"01110",
-           "x15":"01111","x16":"10000","x17":"10001","x18":"10010","x19":"10011",
-           "x20":"10100","x21":"10101","x22":"10110","x23":"10111","x24":"11000",
-           "x25":"11001","x26":"11010","x27":"11011","x28":"11100","x29":"11101",
+           "x5":"00101", "x6":"00110", "x7":"00111","x8":"01000","x9":"01001",
+           "x10":"01010","x11":"01011", "x12":"01100","x13":"01101","x14":"01110",
+           "x15":"01111", "x16":"10000","x17":"10001","x18":"10010","x19":"10011",
+           "x20":"10100","x21":"10101", "x22":"10110","x23":"10111","x24":"11000",
+           "x25":"11001","x26":"11010","x27":"11011", "x28":"11100","x29":"11101",
            "x30":"11110","x31":"11111","zero":"00000","ra":"00001",
-           "sp":"00010","gp":"00011","tp":"00100","t0":"00101","t1":"00110",
-           "t2":"00111","s0":"01000","fp":"01000","s1":"01001","a0":"01010",
+           "sp":"00010","gp":"00011", "tp":"00100","t0":"00101", "t1":"00110",
+           "t2":"00111", "s0":"01000", "fp":"01000", "s1":"01001","a0":"01010",
            "a1":"01011","a2":"01100","a3":"01101","a4":"01110","a5":"01111",
            "a6":"10000","a7":"10001","s2":"10010","s3":"10011","s4":"10100",
            "s5":"10101","s6":"10110","s7":"10111","s8":"11000","s9":"11001",
@@ -150,15 +150,12 @@ def encode_i(parts,label_map,addr):
 
     if len(parts) != 4:
         print("Wrong number of Arguments")
-
         exit()
 
     instr = parts[0]
 
     if instr not in Itype :
         print("Invalid Instruction")
-
-
         exit()
 
     if parts[1] not in registers:
@@ -204,7 +201,6 @@ def encode_i(parts,label_map,addr):
         
         
         rd = registers[parts[1]]
-
         rs = registers[parts[2]]
 
         if parts[3] in label_map:
@@ -264,17 +260,14 @@ def encode_s(parts):
 
     if instr != "sw":
         print("invalid instruction")
-
         exit()
 
     if parts[1] not in registers:
         print("Wrong Register" , parts[1])
-
         exit()
 
     if parts[3] not in registers:
         print("Wrong Register" , parts[3])
-
         exit() 
 
     source_reg = registers[parts[1]]
@@ -291,8 +284,6 @@ def encode_s(parts):
     opcode = "0100011"
 
     func3 = "010" 
-
-
 
     return imm1 + source_reg + base_reg + func3 + imm2 + opcode
 
@@ -331,6 +322,7 @@ def encode_u(parts):
     if parts[1] not in registers:
         print("invalid parameter " + parts[1])
         exit()
+               
     rd  = registers[parts[1]]
     imm = int(parts[2])
     opcode  = Utype[instr]["opcode"]
@@ -340,7 +332,6 @@ def encode_u(parts):
 def gen_machine_code(c_line,label_map):
 
     b_output=[]
-    error_list=[]
     addr=0
 
     s_seen= False
@@ -349,8 +340,7 @@ def gen_machine_code(c_line,label_map):
 
     for i in c_line:
         parts= split_part(i)
-        print("processing", parts)
-
+               
         if not parts:
             continue
         inst=parts[0]
@@ -385,7 +375,7 @@ def gen_machine_code(c_line,label_map):
             s_last = False
         else:
             result = None
-            err= "unknonwn instruction" + inst
+           print( "unknonwn instruction" + inst)
             s_last = False
         
         addr+=4
@@ -398,7 +388,6 @@ def gen_machine_code(c_line,label_map):
     if not s_last:
         print("Error: virtual halt is not the last instruction ")
         exit()
-
 
     return b_output, error_list
 

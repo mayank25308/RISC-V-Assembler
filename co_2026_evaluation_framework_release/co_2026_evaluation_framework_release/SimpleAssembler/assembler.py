@@ -178,8 +178,53 @@ def encode_b(parts,label_map,addr):
     bit3=imm_bin[2:8]
     bit4=imm_bin[8:12]
     return bit1+bit3+rs2+rs1+func3+bit4+bit2+opcode    
+
+
 def encode_s(parts):
-    print("enter you code here for stype")
+
+           
+    if len(parts)!=4:
+        print("wrong number of arguments")
+        exit()
+
+    instr = parts[0] 
+     
+
+    if instr != "sw":
+        print("invalid instruction")
+
+        exit()
+
+    if parts[1] not in registers:
+        print("Wrong Register" , parts[1])
+
+        exit()
+
+    if parts[3] not in registers:
+        print("Wrong Register" , parts[3])
+
+        exit() 
+
+    source_reg = registers[parts[1]]
+
+    base_reg = registers[parts[3]]
+
+
+    offset = to_binary(int(parts[2]) , 12)
+
+    offset_str = str(offset)
+
+    imm1 = offset_str[0:7]
+
+    imm2 = offset_str[7:12]
+
+    opcode = "0100011"
+
+    func3 = "010" 
+
+
+
+    return imm1 + source_reg + base_reg + func3 + imm2 + opcode
 
 def encode_j(parts,label_map,addr):
     if len(parts) !=3:

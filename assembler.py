@@ -170,15 +170,15 @@ def encode_b(parts,label_map,addr):
     if target in label_map:
         offset=label_map[target]-addr
     else:
-        offset=int(target)
-        opcode=Btype[instr]["opcode"]
-        func3=Btype[instr]["func3"]
-        imm_bin=to_binary(offset,13)
-        bit1=imm_bin[0]
-        bit2=imm_bin[1]
-        bit3=imm_bin[2:8]
-        bit4=imm_bin[8:12]
-        return bit1+bit3+rs2+rs1+func3+bit4+bit2+opcode    
+           offset=int(target)
+    opcode=Btype[instr]["opcode"]
+    func3=Btype[instr]["func3"]
+    imm_bin=to_binary(offset,13)
+    bit1=imm_bin[0]
+    bit2=imm_bin[1]
+    bit3=imm_bin[2:8]
+    bit4=imm_bin[8:12]
+    return bit1+bit3+rs2+rs1+func3+bit4+bit2+opcode    
 def encode_s(parts):
     print("enter you code here for stype")
 

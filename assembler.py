@@ -60,7 +60,6 @@ def read_file(file):
         print("file not found")
         return []
 
-read_file("input.txt")
 
 
 def split_part(line):

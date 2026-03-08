@@ -147,7 +147,79 @@ def to_binary(number, bits):
 
 
 def encode_i(parts,label_map,addr):
-    return "00"
+
+    if len(parts) != 4:
+        print("Wrong number of Arguments")
+
+        exit()
+
+    instr = parts[0]
+
+    if instr not in Itype :
+        print("Invalid Instruction")
+
+
+        exit()
+
+    if parts[1] not in registers:
+            print("Wrong Register" , parts[1])
+
+            exit()
+
+
+    if instr == "addi" or instr == "sltui" :
+
+        if parts[2] not in registers:
+            print("Wrong Register" , parts[2])
+
+            exit()
+        
+        rd = registers[parts[1]]
+
+        rs = registers[parts[2]]
+
+        imm = to_binary(int(parts[3]) , 12)
+    
+    elif instr == "lw" :
+
+        if parts[3] not in registers:
+            print("Wrong Register" , parts[3])
+
+            exit()
+        
+        rd = registers[parts[1]]
+
+        rs = registers[parts[3]]
+
+        imm = to_binary(int(parts[2]) , 12)
+
+         
+    
+    elif instr == "jalr":
+
+        if parts[2] not in registers:
+            print("Wrong Register" , parts[2])
+
+            exit()
+        
+        
+        rd = registers[parts[1]]
+
+        rs = registers[parts[2]]
+
+        if parts[3] in label_map:
+            
+            imm = to_binary(label_map[parts[3]] - addr , 12 )
+
+        else:
+
+            imm = to_binary(int(parts[3]) , 12)
+
+
+
+    return imm + rs + Itype[instr]["func3"] + rd + Itype[instr]["opcode"] 
+
+
    
 def encode_b(parts,label_map,addr):
     if len(parts)!=4:

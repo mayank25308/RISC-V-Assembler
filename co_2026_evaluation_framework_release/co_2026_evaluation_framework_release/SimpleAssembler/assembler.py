@@ -212,11 +212,9 @@ def encode_s(parts):
 
     offset = to_binary(int(parts[2]) , 12)
 
-    offset_str = str(offset)
+    imm1 = offset[0:7]
 
-    imm1 = offset_str[0:7]
-
-    imm2 = offset_str[7:12]
+    imm2 = offset[7:12]
 
     opcode = "0100011"
 

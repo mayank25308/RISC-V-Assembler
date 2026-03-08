@@ -201,8 +201,8 @@ def gen_machine_code(c_line,label_map):
         elif inst in Jtype:
 
             result = encode_j(parts,label_map, addr)
-
-            s_last = False
+            s_last = False 
+            
         else:
             result = None
             err= "unknonwn instruction" + inst

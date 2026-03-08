@@ -4,4 +4,4 @@ People Working
 Garv Chadha - 2025208
 Dev Kumar - 2025174
 Mayank - 2025308
-Aryaansh Mehndiratta - 
+Aryaansh Mehndiratta - 2025119

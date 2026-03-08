@@ -58,7 +58,7 @@ def read_file(file):
     
     except FileNotFoundError:
         print("file not found")
-        return []
+        exit()
 
 
 
@@ -110,6 +110,7 @@ def encode_r(parts):
     instr = parts[0]
     if instr not in Rtype:
         print("invalid instruction")
+        exit()
 
     if parts[1] not in registers:
         print( "invalid parameter" + parts[1])
@@ -163,7 +164,7 @@ def encode_i(parts,label_map,addr):
             exit()
 
 
-    if instr == "addi" or instr == "sltui" :
+    if instr == "addi" or instr == "sltiu":
 
         if parts[2] not in registers:
             print("Wrong Register" , parts[2])
@@ -216,10 +217,12 @@ def encode_i(parts,label_map,addr):
 
    
 def encode_b(parts,label_map,addr):
+
+    instr=parts[0]
     if len(parts)!=4:
         print("invalid instruction"+instr)
         exit()
-    instr=parts[0]
+    
     if instr not in Btype:
         print("invalid parameter"+parts[1])
         exit()
@@ -352,7 +355,7 @@ def gen_machine_code(c_line,label_map):
         elif inst in Btype:
             result = encode_b(parts,label_map,addr)
             
-            if parts == ["beq","zero","zero","0"]:
+            if result =="00000000000000000000000001100011":
                 s_seen= True
                 s_last= True
             else:
@@ -374,8 +377,8 @@ def gen_machine_code(c_line,label_map):
         else:
             result = None
             print( "unknonwn instruction", inst)
-            s_last = False
-        
+            exit()
+            
         addr+=4
         b_output.append(result)
     

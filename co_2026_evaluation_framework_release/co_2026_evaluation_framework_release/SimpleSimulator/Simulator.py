@@ -89,3 +89,10 @@ def exe_b(instr):
         pc += 4
     registers[0]=0    
     
+def exe_auipc(instr):
+    global pc
+    rd = int(instr[20:25],2)
+    imm = instr[0:20] + "000000000000"
+    registers[rd] = (pc + to_int(imm)) & 0xFFFFFFFF
+    registers[0]=0
+    pc+=4

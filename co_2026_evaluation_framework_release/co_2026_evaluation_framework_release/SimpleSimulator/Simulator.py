@@ -79,3 +79,58 @@ def form():
     for i in registers:
         parts.append("0b" + format(i & 0xFFFFFFFF, "032b"))
     return " ".join(parts)
+def exe_jalr(instr):
+    global pc
+    imm = to_int(instr[0:12])
+    rs1 = int(instr[12:17],2)
+    rd = int(instr[20:25],2)
+    temp = pc + 4
+    trgt = (registers[rs1] + imm) & 0xFFFFFFFE
+    registers[rd] = temp & 0xFFFFFFFF
+    registers[0]=0
+    pc=trgt & 0xFFFFFFFF
+def exe_jal(instr):
+    global pc
+    imm = instr[0] + instr[12:20] + instr[11] + instr[1:11] + "0"
+    imm = to_int(imm)
+    rd = int(instr[20:25],2)
+    registers[rd] = (pc + 4) & 0xFFFFFFFF
+    registers[0]=0
+    pc = (pc + imm) & 0xFFFFFFFF 
+def exe_b(instr):
+    global pc
+    imm = instr[0] + instr[24] + instr[1:7] + instr[20:24] + "0"
+    imm = to_int(imm)
+    rs1 = int(instr[12:17],2)
+    rs2 = int(instr[7:12],2)
+    func3 = instr[17:20]   
+    check= False
+
+    if func3=="000" :
+        check= registers[rs1]==registers[rs2]
+       
+    elif func3=="001": 
+        check= registers[rs1]!=registers[rs2]
+   
+    elif func3=="100" : 
+        a=signed(registers[rs1])
+        b=signed(registers[rs2])
+        check= a < b
+        
+    elif func3=="101" : 
+        a=signed(registers[rs1])
+        b=signed(registers[rs2])
+        check= a >= b
+        
+    elif func3=="110" : 
+        check= (registers[rs1] & 0xFFFFFFFF) < (registers[rs2] & 0xFFFFFFFF)
+      
+    elif func3=="111" : 
+        check= (registers[rs1] & 0xFFFFFFFF) >= (registers[rs2] & 0xFFFFFFFF)
+        
+    if check:
+        pc = (pc + imm) & 0xFFFFFFFF
+    else: 
+        pc += 4
+    registers[0]=0    
+    

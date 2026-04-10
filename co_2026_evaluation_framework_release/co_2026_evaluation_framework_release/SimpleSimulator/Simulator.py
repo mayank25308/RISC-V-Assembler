@@ -184,6 +184,30 @@ def exe_r(instr):
     registers[0]=0
     pc+=4
 
+def mem_read(addr):
+    global error
+    
+    if  addr % 4 != 0:
+        print(f"ERROR: Unaligned memory access at address 0x{addr:08X} for lw")
+        error= True
+        return 0
+    
+    if 0x0000 <= addr <=0x00FF:
+        if addr//4 >= len(p_mem):
+            print(f"ERROR: invalid memory access at address 0x{addr:08X}")
+            error= True
+            return 0
+        return int(p_mem[addr//4],2)
+    
+    elif 0x0100 <= addr <=0x017F:
+        return stack_mem[(addr - 0x0100)//4]
+    elif 0x00010000 <= addr <=0x0001007F:
+        return data_mem[(addr-0x00010000)//4]
+    else:
+        print(f"ERROR: Invalid memory access at address 0x{addr:08X} ")
+        error= True
+        return 0
+
 def execute(instr):
     global error
     opcode=instr[25:]

@@ -138,7 +138,51 @@ def exe_lui(instr):
     registers[rd] = to_int(imm) & 0xFFFFFFFF
     registers[0]=0
     pc+=4
+    
+def exe_r(instr):
+    global pc
 
+    rd=int(instr[20:25],2)
+    func3=instr[17:20]
+    rs1=int(instr[12:17],2)
+    rs2=int(instr[7:12],2)
+    func7=instr[0:7]
+
+    if func3=="000" and func7=="0000000":
+        registers[rd]= (registers[rs1] + registers[rs2]) & 0xFFFFFFFF
+    
+    elif func3=="000" and func7=="0100000":
+        registers[rd]= (registers[rs1] - registers[rs2]) & 0xFFFFFFFF
+    
+    elif func3=="111" and func7=="0000000":
+        registers[rd]= (registers[rs1] & registers[rs2]) & 0xFFFFFFFF
+    
+    elif func3=="110" and func7=="0000000":
+        registers[rd]= (registers[rs1] | registers[rs2]) & 0xFFFFFFFF
+    elif func3=="100" and func7=="0000000":
+        registers[rd]= (registers[rs1] ^ registers[rs2])  & 0xFFFFFFFF
+    
+    elif func3=="001" and func7=="0000000":
+        shamt=registers[rs2] & 0x1F
+        registers[rd]= (registers[rs1] << shamt) & 0xFFFFFFFF
+    elif func3=="101" and func7=="0000000":
+        shamt=registers[rs2] & 0x1F
+        registers[rd]= (registers[rs1] >> shamt) & 0xFFFFFFFF
+   
+    elif func3=="101" and func7=="0100000":
+        shamt=registers[rs2] & 0x1F
+        val=signed(registers[rs1])
+        registers[rd]= (val >> shamt) & 0xFFFFFFFF
+    
+    elif func3=="010" and func7=="0000000":
+        registers[rd]= 1 if signed(registers[rs1]) < signed(registers[rs2]) else 0
+    
+    elif func3=="011" and func7=="0000000":
+        registers[rd]= 1 if (registers[rs1] & 0xFFFFFFFF) < (registers[rs2] & 0xFFFFFFFF) else 0
+    
+    
+    registers[0]=0
+    pc+=4
 
 def execute(instr):
     global error

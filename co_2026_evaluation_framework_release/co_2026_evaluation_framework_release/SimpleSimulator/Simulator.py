@@ -24,54 +24,6 @@ def read(f_name):
             p_mem.append(line.strip())
 
 
-def mem_read(addr):
-    global error
-    
-    if  addr % 4 != 0:
-        print(f"ERROR: Unaligned memory access at address 0x{addr:08X} for lw")
-        error= True
-        return 0
-    
-    if 0x0000 <= addr <=0x00FF:
-        if addr//4 >= len(p_mem):
-            print(f"ERROR: invalid memory access at address 0x{addr:08X}")
-            error= True
-            return 0
-        return int(p_mem[addr//4],2)
-    
-    elif 0x0100 <= addr <=0x017F:
-        return stack_mem[(addr - 0x0100)//4]
-    elif 0x00010000 <= addr <=0x0001007F:
-        return data_mem[(addr-0x00010000)//4]
-    else:
-        print(f"ERROR: Invalid memory access at address 0x{addr:08X} ")
-        error= True
-        return 0
-
-
-    
-def mem_write(addr, value):
-    global error
-
-    if addr % 4 != 0:
-        print(f"ERROR: Unaligned memory access at address 0x{addr:08X} for sw")
-        error= True
-        return
-    
-    if 0x0000 <= addr <=0x00FF:
-        print(f"ERROR: Invalid memory access at address 0x{addr:08X} for sw")
-        error= True
-        return
-
-
-    if 0x0100<= addr<= 0x017F:
-         stack_mem[(addr - 0x0100) // 4] = value
-    elif 0x00010000 <= addr <= 0x0001007F:
-        data_mem[(addr - 0x00010000) // 4] = value
-    else:
-        print(f"ERROR: Invalid memory access at address 0x{addr:08X} ")
-        error= True
-        return
     
 def form():
     parts = []
@@ -79,6 +31,7 @@ def form():
     for i in registers:
         parts.append("0b" + format(i & 0xFFFFFFFF, "032b"))
     return " ".join(parts)
+    
 def exe_jalr(instr):
     global pc
     imm = to_int(instr[0:12])
@@ -89,6 +42,7 @@ def exe_jalr(instr):
     registers[rd] = temp & 0xFFFFFFFF
     registers[0]=0
     pc=trgt & 0xFFFFFFFF
+    
 def exe_jal(instr):
     global pc
     imm = instr[0] + instr[12:20] + instr[11] + instr[1:11] + "0"
@@ -97,6 +51,7 @@ def exe_jal(instr):
     registers[rd] = (pc + 4) & 0xFFFFFFFF
     registers[0]=0
     pc = (pc + imm) & 0xFFFFFFFF 
+    
 def exe_b(instr):
     global pc
     imm = instr[0] + instr[24] + instr[1:7] + instr[20:24] + "0"

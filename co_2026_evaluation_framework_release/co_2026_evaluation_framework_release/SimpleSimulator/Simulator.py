@@ -60,29 +60,22 @@ def exe_b(instr):
     rs2 = int(instr[7:12],2)
     func3 = instr[17:20]   
     check= False
-
     if func3=="000" :
         check= registers[rs1]==registers[rs2]
-       
     elif func3=="001": 
         check= registers[rs1]!=registers[rs2]
-   
     elif func3=="100" : 
         a=signed(registers[rs1])
         b=signed(registers[rs2])
         check= a < b
-        
     elif func3=="101" : 
         a=signed(registers[rs1])
         b=signed(registers[rs2])
         check= a >= b
-        
     elif func3=="110" : 
         check= (registers[rs1] & 0xFFFFFFFF) < (registers[rs2] & 0xFFFFFFFF)
-      
     elif func3=="111" : 
         check= (registers[rs1] & 0xFFFFFFFF) >= (registers[rs2] & 0xFFFFFFFF)
-        
     if check:
         pc = (pc + imm) & 0xFFFFFFFF
     else: 

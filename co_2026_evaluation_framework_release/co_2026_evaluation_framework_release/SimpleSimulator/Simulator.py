@@ -96,3 +96,11 @@ def exe_auipc(instr):
     registers[rd] = (pc + to_int(imm)) & 0xFFFFFFFF
     registers[0]=0
     pc+=4
+
+def exe_lui(instr):
+    global pc
+    rd = int(instr[20:25],2)
+    imm = instr[0:20] + "000000000000"
+    registers[rd] = to_int(imm) & 0xFFFFFFFF
+    registers[0]=0
+    pc+=4

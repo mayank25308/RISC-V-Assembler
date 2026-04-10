@@ -117,3 +117,75 @@ def exe_lui(instr):
     registers[rd] = to_int(imm) & 0xFFFFFFFF
     registers[0]=0
     pc+=4
+
+
+def execute(instr):
+    global error
+    opcode=instr[25:]
+
+    if opcode=='0110011':
+        exe_r(instr)
+    elif opcode=='0010011':
+        exe_i(instr)
+    elif opcode=='0000011':
+        exe_lw(instr)
+    elif opcode=='0100011':
+        exe_sw(instr)
+    elif opcode=='1100011':
+        exe_b(instr)
+    elif opcode=='1101111':
+        exe_jal(instr)
+    elif opcode=='1100111':
+        exe_jalr(instr)
+    elif opcode=='0110111':
+        exe_lui(instr)
+    elif opcode=='0010111':
+        exe_auipc(instr)
+    else:
+        print("Invalid instruction opcode:", opcode)
+        error= True
+        return
+    
+
+import sys
+
+def main():
+    global pc, error
+    input_f=sys.argv[1]
+    output_f=sys.argv[2]
+
+    read(input_f)
+    registers[2]= 0x017c
+    HALT = "00000000000000000000000001100011"
+    while True:
+        if pc//4 >= len(p_mem):
+            print(f"ERROR: PC out of bounds at address 0x{pc:08X}")
+            error= True
+            break
+
+        instr=p_mem[pc//4]
+        
+
+        if instr==HALT:
+            output_l.append(form())
+            
+            break
+        execute(instr)
+
+        output_l.append(form())
+        if error:
+            break
+
+    #dumping data 
+    if not error:
+        for i in range(32):
+
+            addr = 0x00010000 + i * 4
+            val = data_mem[i] & 0xFFFFFFFF
+            output_l.append(f"0x{addr:08X}:0b{format(val, '032b')}")
+
+    with open(output_f, "w") as f:
+            f.write("\n".join(output_l) + "\n")
+
+if __name__=="__main__":
+    main()

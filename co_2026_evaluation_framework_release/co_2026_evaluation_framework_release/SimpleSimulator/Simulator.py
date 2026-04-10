@@ -208,6 +208,29 @@ def mem_read(addr):
         error= True
         return 0
 
+def mem_write(addr, value):
+    global error
+
+    if addr % 4 != 0:
+        print(f"ERROR: Unaligned memory access at address 0x{addr:08X} for sw")
+        error= True
+        return
+    
+    if 0x0000 <= addr <=0x00FF:
+        print(f"ERROR: Invalid memory access at address 0x{addr:08X} for sw")
+        error= True
+        return
+
+
+    if 0x0100<= addr<= 0x017F:
+         stack_mem[(addr - 0x0100) // 4] = value
+    elif 0x00010000 <= addr <= 0x0001007F:
+        data_mem[(addr - 0x00010000) // 4] = value
+    else:
+        print(f"ERROR: Invalid memory access at address 0x{addr:08X} ")
+        error= True
+        return
+
 def execute(instr):
     global error
     opcode=instr[25:]

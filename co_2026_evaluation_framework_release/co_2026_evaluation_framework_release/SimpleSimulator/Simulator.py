@@ -95,6 +95,34 @@ def exe_i(instr):
         registers[rd]= 1 if u_rs1 < u_imm else 0
     registers[0]=0
     pc+=4
+
+def exe_lw(instr):
+    global pc
+    imm = to_int(instr[0:12])
+    rs1 = int(instr[12:17],2)
+    rd = int(instr[20:25],2)
+    addr = (registers[rs1] + imm) & 0xFFFFFFFF
+    val = mem_read(addr)
+    if error:
+        return
+    registers[rd] = val
+    registers[0]=0
+    pc+=4
+
+def exe_sw(instr):
+    global pc
+    imm = instr[0:7] + instr[20:25]
+    imm = to_int(imm)
+    rs1 = int(instr[12:17],2)
+    rs2 = int(instr[7:12],2)
+    addr = (registers[rs1] + imm) & 0xFFFFFFFF
+    mem_write(addr, registers[rs2] & 0xFFFFFFFF) 
+    if error:
+        return
+    registers[0]=0
+    pc+=4
+
+
 def exe_auipc(instr):
     global pc
     rd = int(instr[20:25],2)

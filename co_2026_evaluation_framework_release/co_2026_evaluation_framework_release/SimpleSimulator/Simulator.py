@@ -88,7 +88,20 @@ def exe_b(instr):
     else: 
         pc += 4
     registers[0]=0    
-    
+def exe_i(instr):
+    global pc
+    imm = to_int(instr[0:12])
+    rs1 = int(instr[12:17],2)
+    rd = int(instr[20:25],2)
+    func3 = instr[17:20]
+    if func3=="000":
+        registers[rd] = (registers[rs1] + imm) & 0xFFFFFFFF
+    elif func3=="011":
+        u_rs1=registers[rs1] & 0xFFFFFFFF
+        u_imm=imm & 0xFFFFFFFF
+        registers[rd]= 1 if u_rs1 < u_imm else 0
+    registers[0]=0
+    pc+=4
 def exe_auipc(instr):
     global pc
     rd = int(instr[20:25],2)
